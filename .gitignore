@@ -1,0 +1,4 @@
+src/Database/
+node_modules/
+package-lock.json
+key.json
