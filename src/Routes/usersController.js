@@ -17,29 +17,6 @@ export default {
     },
 
     delete: async (req, res) => {
-        const { email, password } = req.body;
-
-        if(!email || !password) return res.status(400).json({'Error': 'Missing parameters'});
-
-        const user = new Database('src/Database/users.db').prepare(`SELECT username, id, email FROM Users WHERE email = ?`).get(email);
-
-        if(!user) return res.status(404).json({'Error': 'User not found'});
-        
-        emailUtils.default.sendMail(
-            {
-                email: user.email, 
-                subject: "Nowlid - Confirm account deletion", 
-                textPart: "Nowlid - Confirm account deletion",
-                htmlPart: "Click URL: " + `http://localhost:8080/validate/${jwtUtils.generateValidateToken(user, "delete")}`
-            })
-        .then(() => {
-            return res.status(200).json({'Succes': "Email send"});
-        }).catch(() => {
-            return res.status(400).json({'Error': "Email not send"});
-        });
-    },
-
-    validate: (req, res) => {
         const {token} = req.params;
         const checkToken = jwtUtils.validateToken(token);
 
@@ -56,6 +33,37 @@ export default {
                 db.prepare('DELETE FROM Users WHERE username = ?').run(user.username);
             return res.status(200).json({'Succes': "Account delete"});
         };
+    },
+
+    validate: async (req, res) => {
+        const { email, password, methode } = req.body;
+
+        if(!email || !password) return res.status(400).json({'Error': 'Missing parameters'});
+
+        const user = new Database('src/Database/users.db').prepare(`SELECT username, id, email FROM Users WHERE email = ?`).get(email);
+
+        if(!user) return res.status(404).json({'Error': 'User not found'});
+        
+        switch(methode) {
+            case 'delete':
+                emailUtils.default.sendMail(
+                    {
+                        email: user.email, 
+                        subject: "Nowlid - Confirm account deletion", 
+                        textPart: "Nowlid - Confirm account deletion",
+                        htmlPart: `
+                        <center>
+                            <a href="http://localhost/users/delete/${jwtUtils.generateValidateToken(user, "delete")}" target="_blank"">Confirm account deletion</a>
+                        </center>
+                        `
+                    })
+                .then(() => {
+                    return res.status(200).json({'Succes': "Email send"});
+                }).catch(() => {
+                    return res.status(400).json({'Error': "Email not send"});
+                });
+            break;
+        }
     },
 
     createAccount: (req, res) => {
