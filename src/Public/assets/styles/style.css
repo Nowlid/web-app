@@ -1,0 +1,315 @@
+:root {
+  --primary-color: #86beda;
+  --white: #fff;
+  --black: #000;
+  --background: #111;
+}
+
+@keyframes turn-animation {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp, small,
+strike, strong, sub, sup, tt, var, b, u, i,
+center, dl, dt, dd, ol, ul, li, fieldset, form,
+label, legend, table, caption, tbody, tfoot,
+thead, tr, th, td, article, aside, canvas,
+details, embed, figure, figcaption, footer,
+header, hgroup, menu, nav, output, ruby, section,
+summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+  box-sizing: inherit;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  font-family: "Inter";
+  color: var(--white);
+}
+
+html {
+  box-sizing: border-box;
+  overflow-x: none;
+}
+
+a, button, input, textarea, fieldset {
+  outline: none;
+}
+
+a, button, input[type=radio], input[type=checkbox] {
+  cursor: pointer;
+}
+
+::-webkit-scrollbar {
+  background: var(--background);
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 6px;
+  border: 2px solid var(--background);
+}
+
+svg:not(:root) {
+  display: block;
+}
+
+::-moz-selection {
+  background: rgba(238, 238, 238, 0.8666666667);
+}
+
+::selection {
+  background: rgba(238, 238, 238, 0.8666666667);
+}
+
+::-moz-placeholder {
+  cursor: default;
+  -moz-user-select: none;
+       user-select: none;
+}
+
+h1, h2, h3, h4, h5, p, a, span, button, ::placeholder {
+  cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--background);
+  overflow: hidden;
+  position: relative;
+}
+body header {
+  padding: 10px 0;
+  height: 100px;
+  z-index: 2;
+}
+body header .logo img {
+  -o-object-fit: contain;
+     object-fit: contain;
+  transform: scale(87%);
+  filter: contrast(92%) opacity(92%);
+}
+body header button.dropdown {
+  position: relative;
+  display: none;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  outline: none;
+  opacity: 1;
+  transition: 0.4s ease;
+  cursor: pointer;
+  margin: 1em 1.2em;
+  z-index: 1;
+}
+body header button.dropdown .carret {
+  top: 15px;
+}
+body header button.dropdown .carret::after {
+  bottom: 14px;
+}
+body header button.dropdown .carret::before {
+  top: 14px;
+}
+body header button.dropdown .carret, body header button.dropdown .carret::after, body header button.dropdown .carret::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--white);
+  position: absolute;
+  pointer-events: none;
+  transition: 0.4s ease;
+  left: 0;
+  transform-origin: right;
+}
+body header button.dropdown.active .carret {
+  background: transparent;
+}
+body header button.dropdown.active .carret::after {
+  transform: rotate(-45deg);
+}
+body header button.dropdown.active .carret::before {
+  transform: rotate(45deg);
+}
+body header button.dropdown:hover, body header button.dropdown:focus {
+  opacity: 75%;
+}
+body header nav, body header .auth {
+  list-style: none;
+  height: 30px;
+  gap: 1em;
+  z-index: 1;
+  position: relative;
+}
+body header nav .nav-link, body header nav > a, body header .auth .nav-link, body header .auth > a {
+  text-decoration: none;
+  background: rgba(134, 190, 218, 0.3333333333);
+  padding: 5px 10px;
+  border: 1px solid var(--primary-color);
+  border-radius: 16px;
+  gap: 5px;
+  height: 30px;
+  cursor: pointer;
+  opacity: 1;
+  transition: 0.4s ease;
+  position: relative;
+}
+body header nav .nav-link img, body header nav > a img, body header .auth .nav-link img, body header .auth > a img {
+  transform: scale(0.8);
+  -o-object-fit: contain;
+     object-fit: contain;
+  pointer-events: none;
+  filter: invert(100%) sepia(10%) saturate(0) hue-rotate(254deg) brightness(104%) contrast(102%);
+}
+body header nav .nav-link span, body header nav > a span, body header .auth .nav-link span, body header .auth > a span {
+  pointer-events: none;
+}
+body header nav .nav-link:hover, body header nav .nav-link:focus, body header nav > a:hover, body header nav > a:focus, body header .auth .nav-link:hover, body header .auth .nav-link:focus, body header .auth > a:hover, body header .auth > a:focus {
+  opacity: 0.8;
+}
+body header .auth {
+  margin-right: 2em;
+}
+@media screen and (min-width: 700px) and (max-width: 1000px) {
+  body header .auth a {
+    padding: 5px 2px;
+  }
+  body header .auth a span {
+    display: none;
+  }
+  body header .auth a:last-child {
+    display: none;
+  }
+}
+@media screen and (max-width: 700px) {
+  body header nav {
+    position: absolute;
+    flex-direction: column !important;
+    width: 90%;
+    background: var(--primary-color);
+    top: 0;
+    right: 6px;
+    height: -moz-fit-content;
+    height: fit-content;
+    gap: 6px;
+    padding: 6px 0;
+    transition: none;
+    animation: translateInY reverse 750ms ease forwards;
+    border-radius: 3px;
+  }
+  body header nav .nav-link, body header nav > a {
+    border: none;
+    border-radius: 0;
+    width: calc(90vw - 4em - 6px);
+    position: relative;
+    left: -1.5em;
+    justify-content: flex-start;
+  }
+  body header nav .nav-link:not(:last-child)::after, body header nav > a:not(:last-child)::after {
+    content: "test";
+    display: block;
+    width: 100%;
+    height: 5px;
+    background: #f00;
+  }
+  body header nav ~ .auth {
+    display: none !important;
+  }
+  body header nav.active {
+    animation: translateInY 750ms ease forwards;
+  }
+  body header nav::before {
+    content: "";
+    position: absolute;
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: var(--primary-color);
+    top: -8px;
+    right: 19px;
+    transform: rotate(45deg);
+    border-radius: 2px;
+  }
+  @keyframes translateInY {
+    from {
+      transform: translateY(-150%);
+    }
+    60% {
+      transform: translateY(110px);
+    }
+    to {
+      transform: translateY(100px);
+    }
+  }
+  body header button.dropdown {
+    display: initial;
+  }
+}
+body .loader-container {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 10000000000;
+  top: 0;
+  left: 0;
+}
+body .loader-container .page-loader {
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  opacity: 1;
+  pointer-events: none;
+  transition: 1s ease-in-out;
+  z-index: 10000000000;
+}
+body .loader-container .page-loader img {
+  position: relative;
+  width: 4em;
+}
+body .loader-container .page-loader img:nth-child(1) {
+  top: 2em;
+  animation: turn-animation 0.8s linear infinite;
+}
+body .loader-container .page-loader img:nth-child(2) {
+  top: -2em;
+  animation: turn-animation 0.8s cubic-bezier(0.445, 0.1, 0.55, 0.9) 0.1s infinite;
+}
+body main {
+  z-index: 1;
+}
+body.loaded {
+  overflow: initial;
+}
+body.loaded .loader-container {
+  z-index: -1;
+}
+body.loaded .loader-container .page-loader {
+  opacity: 0;
+  visibility: hidden;
+  z-index: -1;
+}
+body footer {
+  height: 100px;
+  width: 100%;
+  text-align: center;
+}/*# sourceMappingURL=style.css.map */
