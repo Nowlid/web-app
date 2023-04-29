@@ -5,8 +5,6 @@ const { urlencoded, json } = pkg;
 import Database from 'better-sqlite3';
 import { userRoute } from './routers.js';
 import jwtUtils from './Utils/jwt.utils.js';
-import { RecaptchaV3 } from 'express-recaptcha';
-const Recaptcha = new RecaptchaV3('6Lc75awlAAAAAIxzboLUQkfenExdcIFexUFUxz27', '6Lc75awlAAAAAJyMw5-GaypwR5g6_U5j4RDk6Mtx', { callback: 'cb' });
 
 new Database('src/Database/users.db').prepare(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, username TEXT, password TEXT, avatar TEXT, dateCreated TEXT)`).run();
 
