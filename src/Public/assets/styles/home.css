@@ -1,0 +1,176 @@
+body main > section {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  margin-bottom: 11px;
+}
+body main > section h2.section-title {
+  color: var(--primary-color);
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: underline;
+  font-size: 2.4rem;
+  margin: 0.5em 0;
+}
+body main > section:not(:last-child)::after {
+  content: "";
+  display: block;
+  position: absolute;
+  background: var(--white);
+  width: calc(100% - 2em);
+  height: 3px;
+  left: 1em;
+  bottom: 0;
+  border-radius: 2px;
+  opacity: 0.9;
+}
+body main section#introduction > div {
+  height: 100%;
+  margin: 0;
+}
+body main section#introduction .content .title {
+  text-align: center;
+  font-size: 2rem;
+  width: 60vw;
+}
+body main section#introduction .content .title span {
+  font-size: 120%;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+body main section#introduction .image {
+  width: 40vw;
+  position: relative;
+  left: -2em;
+}
+body main section#introduction .image img {
+  transform: scale(97.5%);
+}
+@media screen and (max-width: 950px) {
+  body main section#introduction {
+    flex-direction: column;
+  }
+  body main section#introduction .content .title, body main section#introduction .image {
+    width: 100vw;
+  }
+  body main section#introduction .title {
+    margin: 0.5em 0 1em;
+  }
+  body main section#introduction .image {
+    left: 0;
+  }
+  body main section#introduction .image img {
+    width: 100%;
+  }
+}
+body main section#abilities .container {
+  padding: 2em;
+  gap: 3em 0;
+}
+body main section#abilities .container .card {
+  width: calc(50% - 4em);
+  height: 250px;
+  background: var(--primary-color);
+  position: relative;
+  cursor: pointer;
+  max-width: 600px;
+  min-width: 350px;
+}
+body main section#abilities .container .card > div {
+  pointer-events: none;
+}
+body main section#abilities .container .card .illustration {
+  height: 95%;
+  width: 35%;
+}
+body main section#abilities .container .card .illustration img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+body main section#abilities .container .card .content {
+  width: 65%;
+  height: calc(100% - 2em);
+  padding: 1em;
+}
+body main section#abilities .container .card .content h3 {
+  font-size: 1.5rem;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  width: 100%;
+  text-shadow: -2px 2px rgba(136, 136, 136, 0.1333333333), -4px 4px rgba(136, 136, 136, 0.1333333333), -6px 6px rgba(136, 136, 136, 0.1333333333);
+}
+body main section#abilities .container .card::before {
+  content: "";
+  display: block;
+  background: rgba(238, 238, 238, 0.2);
+  width: 5%;
+  height: 100%;
+  transform: skew(-15deg, 0);
+  position: absolute;
+  left: 70%;
+  transition: 0.4s ease;
+  pointer-events: none;
+  opacity: 40%;
+  filter: blur(80%);
+}
+body main section#abilities .container .card:hover::before {
+  left: 40%;
+  width: 15%;
+  opacity: 1;
+}
+body main section#abilities .container .card:nth-child(odd) {
+  -webkit-clip-path: polygon(0 0, 100% 0, calc(100% - 4em) 100%, 0 100%);
+          clip-path: polygon(0 0, 100% 0, calc(100% - 4em) 100%, 0 100%);
+  padding-right: 4em;
+  border-radius: 1em 0 0 1em;
+}
+body main section#abilities .container .card:nth-child(even) {
+  -webkit-clip-path: polygon(4em 0, 100% 0, 100% 100%, 0 100%);
+          clip-path: polygon(4em 0, 100% 0, 100% 100%, 0 100%);
+  padding-left: 4em;
+  border-radius: 0 1em 1em 0;
+}
+body main section#abilities .container#mobile {
+  display: none;
+}
+body main section#abilities .container#mobile .card::before {
+  display: none;
+}
+@media (max-width: 900px) {
+  body main section#abilities .container {
+    width: calc(100% - 4em);
+    padding: 0;
+    gap: 0;
+    height: 240px;
+  }
+  body main section#abilities .container .card {
+    width: 100%;
+    height: 100%;
+    min-width: none !important;
+    max-width: 100%;
+    -webkit-clip-path: none !important;
+            clip-path: none !important;
+    border-radius: 0 !important;
+  }
+  body main section#abilities .container .card .illustration {
+    display: none;
+  }
+  body main section#abilities .container .card .content {
+    padding-right: 3em;
+    width: 100%;
+  }
+  body main section#abilities .container .card .content p {
+    margin-bottom: 1em;
+  }
+  body main section#abilities .container#desktop {
+    display: none;
+  }
+  body main section#abilities .container#mobile {
+    display: flex;
+  }
+}/*# sourceMappingURL=home.css.map */

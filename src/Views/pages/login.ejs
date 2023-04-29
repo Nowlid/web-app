@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+    <title>Connexion</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Inconsolata:wght@500">
+    <link rel="stylesheet" href="/assets/styles/sheet.css">
+    <link rel="stylesheet" href="/assets/styles/style.css">
+    <link rel="stylesheet" href="/assets/styles/auth.css">
+
+    <script src="/assets/js/app.js"></script>
+    <script src="/assets/js/typeit.js"></script>
+
+</head>
+<body id="login">
+
+    <div class="loader-container">
+        <div class="page-loader col-center">
+            <img src="/assets/images/loading-part.svg" alt="Loading">
+            <img src="/assets/images/loading-part.svg" alt="Loading">
+        </div>
+    </div>
+
+    <%- include('../partials/header') %>
+
+    <main id="auth">
+        <section id="login" class="col-center">
+            <form action="/users/login" method="post" class="col-center">
+                <p></p>
+
+                <div class="input-box column" id="email">
+                    <label for="email"></label>
+
+                    <div class="input-content d-none">
+                        <span class="arrow"></span>
+                        <input type="email" id="email" name="email" autocomplete="email" required>
+                    </div>
+                </div>
+
+                <div class="input-box column" id="password">
+                    <label for="password"></label>
+
+                    <div class="input-content d-none">
+                        <span class="arrow"></span>
+                        <input type="password" id="password" name="password" autocomplete="new-password" pattern="(?=.*\d)(?=.*[a-zA-Z])(?=).{8,1048}" title="Minimum 8 characters containing a number">
+                    </div>
+                </div>
+
+                <div class="btn-box row space-between">
+                    <a href="/users/register">Je n'ai pas de compte</a>
+                    <button type="submit">Suivant</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+    <title>User</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>*{font-family: sans-serif}a{color:#00f}</style>
+</head>
+<body>
+
+    <h1><%= users.username %></h1>
+    
+    <ul>
+        <li><%= users.id %></li>
+        <li><%= users.email %></li>
+        <li><%= users.dateCreated %></li>
+        <li><a href="/users/logout">Logout</a></li>
+        <li><a href="/users/delete">Delete</a></li>
+    </ul>
+
+</body>
+</html>

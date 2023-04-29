@@ -4,9 +4,9 @@ import pkg from 'body-parser';
 const { urlencoded, json } = pkg;
 import Database from 'better-sqlite3';
 import { userRoute } from './routers.js';
+import jwtUtils from './Utils/jwt.utils.js';
 
 new Database('src/Database/users.db').prepare(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, username TEXT, password TEXT, avatar TEXT, dateCreated TEXT)`).run();
-
 const app = express();
 
 app.listen(80, () => {
@@ -20,5 +20,15 @@ app.use(cookieParser());
 
 app.set('views', './src/Views/');
 app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+    const { cookies } = req
+    let user;
+    if(cookies["__SESSION_TOKEN"]) {
+        const token = jwtUtils.validateToken(cookies["__SESSION_TOKEN"])
+        if(token.exp > Math.floor(Date.now() / 1000)) user = new Database('src/Database/users.db').prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`).get(token.userId)
+    }
+    res.render('pages/home', {users: user})
+})
 
 app.use('/users', userRoute);

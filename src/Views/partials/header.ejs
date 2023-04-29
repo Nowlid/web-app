@@ -1,0 +1,47 @@
+<header class="row space-between align-center">
+    <div class="logo row-center">
+        <img src="/assets/images/header-logo.png" alt="Nowlid">
+    </div>
+
+    <button class="dropdown col-center" type="button">
+        <span class="carret"></span>
+    </button>
+
+    <nav class="row col-center">
+        <li><a class="nav-link row-center" href="/">
+            <img src="/assets/images/home-icon.png" alt="Accueil" class="icon">
+            <span>Accueil</span>
+        </a></li>
+
+        <li><a class="nav-link row-center" href="/projets">
+            <img src="/assets/images/projects-icon.png" alt="Projets" class="icon">
+            <span>Projets</span>
+        </a></li>
+
+        <li><a class="nav-link row-center" href="/contact">
+            <img src="/assets/images/contact-icon.png" alt="Contact" class="icon">
+            <span>Contact</span>
+        </a></li>
+    </nav>
+
+    <% if(users) {%>
+        <div class="auth row-center">
+            <a class="login row-center" href="/users/">
+                <img src="/assets/images/login-icon.png" alt="Connexion" class="icon">
+                <span><%= users.username %></span>
+            </a>
+        </div>
+    <% } else {%>
+        <div class="auth row-center">
+            <a class="register row-center" href="/users/register">
+                <img src="/assets/images/register-icon.png" alt="Inscription" class="icon">
+                <span>Inscription</span>
+            </a>
+    
+            <a class="login row-center" href="/users/login">
+                <img src="/assets/images/login-icon.png" alt="Connexion" class="icon">
+                <span>Connexion</span>
+            </a>
+        </div>
+    <% }%>
+</header>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+
+    <title>Accueil</title>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900">
+    <link rel="stylesheet" href="/assets/styles/sheet.css">
+    <link rel="stylesheet" href="/assets/styles/style.css">
+    <link rel="stylesheet" href="/assets/styles/aos.css">
+    <link rel="stylesheet" href="/assets/styles/home.css">
+
+    <script src="/assets/js/aos.js"></script>
+    <script src="/assets/js/flexcards.js"></script>
+    <script src="/assets/js/app.js"></script>
+
+</head>
+<body id="home">
+
+    <div class="loader-container">
+        <div class="page-loader col-center">
+            <img src="/assets/images/loading-part.svg" alt="Loading">
+            <img src="/assets/images/loading-part.svg" alt="Loading">
+        </div>
+    </div>
+
+    <%- include('../partials/header') %>
+
+    <main>
+        <section class="row align-center" id="introduction">
+            <div class="content col-center">
+                <div class="title">
+                    Nous sommes une team de<br><span>développeurs</span>
+                </div>
+            </div>
+
+            <div class="image col-center">
+                <img src="/assets/images/man-on-a-desk.png" alt="IT">
+            </div>
+        </section>
+
+        <section id="abilities" class="col-center">
+            <h2 class="section-title">Nos compétences</h2>
+
+            <div class="container row-center wrap" id="desktop">
+                <div class="card row-center">
+                    <div class="illustration row-center">
+                        <img src="/assets/images/man-on-a-desk.png" alt="Développement">
+                    </div>
+
+                    <div class="content col-center">
+                        <h3>Développement</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                    </div>
+                </div>
+
+                <div class="card row-center">
+                    <div class="illustration row-center">
+                        <img src="/assets/images/man-on-a-desk.png" alt="Graphisme">
+                    </div>
+
+                    <div class="content col-center">
+                        <h3>Graphisme</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                    </div>
+                </div>
+
+                <div class="card row-center">
+                    <div class="illustration row-center">
+                        <img src="/assets/images/man-on-a-desk.png" alt="Cybersécurité">
+                    </div>
+
+                    <div class="content col-center">
+                        <h3>Cybersécurité</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                    </div>
+                </div>
+
+                <div class="card row-center">
+                    <div class="illustration row-center">
+                        <img src="/assets/images/man-on-a-desk.png" alt="Gestion">
+                    </div>
+
+                    <div class="content col-center">
+                        <h3>Gestion</h3>
+                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" id="mobile">
+                <article>
+                    <div class="card row-center">
+                        <div class="content col-center">
+                            <h3>Développement</h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <div class="card row-center">
+                        <div class="content col-center">
+                            <h3>Graphisme</h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <div class="card row-center">
+                        <div class="content col-center">
+                            <h3>Cybersécurité</h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article>
+                    <div class="card row-center">
+                        <div class="content col-center">
+                            <h3>Gestion</h3>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Id error, Error, repellendus illum?</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <%- include('../partials/footer') %>
+
+</body>
+</html>
