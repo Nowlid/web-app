@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.5](https://github.com/Nowlid/web-app/compare/v0.3.4...v0.3.5) (2023-04-29)
+
+
+### Bug Fixes
+
+* version standard-version ([8ae6eab](https://github.com/Nowlid/web-app/commit/8ae6eabc2eb3191be507b1493039fd57c21fd367))
+
 ### [0.3.3](https://github.com/Nowlid/web-app/compare/v0.3.3-alpha.1...v0.3.3) (2023-04-29)
 
 ### Features
