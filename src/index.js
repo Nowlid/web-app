@@ -7,7 +7,6 @@ import { userRoute } from './routers.js';
 import jwtUtils from './Utils/jwt.utils.js';
 
 new Database('src/Database/users.db').prepare(`CREATE TABLE IF NOT EXISTS Users(id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT, username TEXT, password TEXT, avatar TEXT, dateCreated TEXT)`).run();
-
 const app = express();
 
 app.listen(80, () => {
@@ -31,15 +30,5 @@ app.get('/', (req, res) => {
     }
     res.render('pages/home', {users: user})
 })
-
-// app.post('/', Recaptcha.middleware.verify, function (req, res) {
-//     console.log('123')
-//     if (!req.recaptcha.error) {
-//         res.redirect('/')
-//     } else {
-//         console.log('test2')
-//         res.redirect('/')
-//     }
-// })
 
 app.use('/users', userRoute);
