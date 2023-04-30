@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "resolveJsonModule": true,
+        "strict": true,
+        "module": "nodenext",
+        "noEmitOnError": true,
+        "allowImportingTsExtensions": true,
+        "noEmit": true
+    },
+}

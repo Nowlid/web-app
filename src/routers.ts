@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import * as usersController from './Routes/usersController.js';
+import * as usersController from './Routes/usersController.ts';
 
 export const userRoute = (() => {
     const apiRouter = Router();
