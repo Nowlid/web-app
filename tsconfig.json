@@ -1,11 +1,8 @@
 {
     "compilerOptions": {
-        "target": "ES2022",
-        "resolveJsonModule": true,
-        "strict": true,
-        "module": "nodenext",
-        "noEmitOnError": true,
-        "allowImportingTsExtensions": true,
-        "noEmit": true
+        "outDir": "dist",
+        "module": "nodenext"
     },
+    "extends": "@vic1707/tsconfig/base.json", 
+    "include": ["src", ".eslintrc.cjs", "key.json"]
 }

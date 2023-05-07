@@ -1,148 +1,171 @@
-import { hash, compare } from 'bcrypt';
-import { Request, Response } from 'express';
+import { compare, hash } from 'bcrypt';
 import Database from 'better-sqlite3';
-import jwtUtils, * as jwt from '../Utils/jwt.utils.ts';
-import * as emailUtils from '../Utils/email.utils.ts';
+import type { Request, Response } from 'express';
+
+import { sendMail } from '../Utils/email.utils';
+import { generateTokenUser, generateValidateToken, validateToken } from '../Utils/jwt.utils';
 
 const USERNAME_REGEX = /^[A-Za-z0-9--_]/;
 const EMAIL_REGEX = /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$/;
 const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-zA-Z])(?=).{8,1048}/;
 
-type User = {
-    id: number,
-    username: string,
-    email: string,
-    dateCreated: string,
-    avatar: string,
-    password: string
+interface User {
+  avatar: string;
+  dateCreated: string;
+  email: string;
+  id: number;
+  password: string;
+  username: string;
 }
-type Body = {
-    email: string, 
-    username?: string, 
-    password?: string,
-    methode?: string
+interface Body {
+  methode?: string;
+  password?: string;
+  username?: string;
+  email: string;
 }
 
-export default {
-    register: (req: Request, res: Response) => {
-        res.render('pages/register', {register: false, users: undefined})
-    },
+export function register(_req: Request, res: Response): void {
+  res.render('pages/register', { register: false, users: undefined });
+}
 
-    login: (req: Request, res: Response) => {
-        res.render('pages/login', {register: true, users: undefined})
-    },
+export function login(_req: Request, res: Response): void {
+  res.render('pages/login', { register: true, users: undefined });
+}
 
-    user: (req: Request, res: Response) => {
-        const { cookies } = req
-        let user: User | undefined;
-        if(cookies["__SESSION_TOKEN"]) {
-            const token = jwtUtils.validateToken(cookies["__SESSION_TOKEN"])
-            if(token && token.exp) {
-                if(token.exp > Math.floor(Date.now() / 1000)) user = new Database('Database/users.db').prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`).get(token.userId) as User | undefined;
-            }
-        }
+export function user(req: Request, res: Response): void {
+  const { cookies }: { cookies: Record<string, string> } = req;
 
-        if(!user) return res.render('pages/register', {register: false, users: undefined})
-        res.render('pages/user', {users: user})
-    },
+  let user: User | undefined;
+  if (cookies['__SESSION_TOKEN']) {
+    const token = validateToken(cookies['__SESSION_TOKEN']);
+    if (token?.exp && token.exp > Math.floor(Date.now() / 1000)) {
+      user = new Database('Database/users.db')
+        .prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`)
+        .get(token['userId']) as User | undefined;
+    }
+  }
 
-    delete: (req: Request, res: Response) => {
-        res.render('pages/delete', {succes: undefined, users: undefined})
-    },
+  if (!user) return res.render('pages/register', { register: false, users: undefined });
+  res.render('pages/user', { users: user });
+}
 
-    deleteConfirm: async (req: Request, res: Response) => {
-        const {token} = req.params;
-        const checkToken = jwtUtils.validateToken(token);
+export function delete_(_req: Request, res: Response): void {
+  res.render('pages/delete', { succes: undefined, users: undefined });
+}
 
-        if(!checkToken?.exp) return res.status(404).json({'Error': 'Validate URL not found'});
-        if(checkToken.exp < Math.floor(Date.now() / 1000)) return res.status(400).json({'Error': 'Validate URL expired'});
-        
-        const db = new Database('Database/users.db')
-        const user = db.prepare(`SELECT username FROM Users WHERE id = ?`).get(checkToken.userId) as User | undefined;
+export function deleteConfirm(req: Request, res: Response): Response | void {
+  const { token } = req.params;
+  if (!token) return res.status(404).json({ Error: 'Missing token' });
+  const checkToken = validateToken(token);
 
-        if(!user) return res.status(404).json({'Error': 'User not found'});
+  if (!checkToken?.exp) return res.status(404).json({ Error: 'Validate URL not found' });
+  if (checkToken.exp < Math.floor(Date.now() / 1000)) return res.status(400).json({ Error: 'Validate URL expired' });
 
-        switch(checkToken.type) {
-            case "delete":
-                db.prepare('DELETE FROM Users WHERE username = ?').run(user.username);
-            return res.status(200).clearCookie('__SESSION_TOKEN').redirect('/');
-        };
-    },
+  const db = new Database('Database/users.db');
+  const user = db.prepare(`SELECT username FROM Users WHERE id = ?`).get(checkToken['userId']) as User | undefined;
 
-    validate: async (req: Request, res: Response) => {
-        const { email, password, methode }: Body = req.body;
+  if (!user) return res.status(404).json({ Error: 'User not found' });
 
-        if(!email || !password) return res.status(400).json({'Error': 'Missing parameters'});
+  switch (checkToken['type']) {
+    case 'delete':
+      db.prepare('DELETE FROM Users WHERE username = ?').run(user.username);
+      return res.status(200).clearCookie('__SESSION_TOKEN').redirect('/');
+  }
+}
 
-        const user  = new Database('Database/users.db').prepare(`SELECT username, id, email, password FROM Users WHERE email = ?`).get(email) as User | undefined;
+export function validate(req: Request, res: Response): Response | void {
+  const { email, methode, password }: Body = req.body;
 
-        if(!user) return res.status(404).json({'Error': 'User not found'});
-       
-        compare(password, user.password, (err, resBcrypt) => {
-            if(!resBcrypt) res.status(403).json({ 'Error': 'Invalid Password'});
-            else {
-                switch(methode) {
-                    case 'delete':
-                        emailUtils.default.sendMail(
-                            {
-                                email: user.email, 
-                                subject: "Nowlid - Confirm account deletion", 
-                                textPart: "Nowlid - Confirm account deletion",
-                                htmlPart: `
-                                <center>
-                                    <a href="http://localhost/users/delete/${jwtUtils.generateValidateToken(user, "delete")}" target="_blank"">Confirm account deletion</a>
-                                </center>
-                                `
-                            })
-                        .then(() => {
-                            return res.status(200).render('pages/delete', {succes: true, data: undefined});
-                        }).catch(() => {
-                            return res.status(200).render('pages/delete', {succes: false, data: undefined});
-                        });
-                    break;
-                }
-            }
-        });
-    },
+  if (!email || !password) return res.status(400).json({ Error: 'Missing parameters' });
 
-    createAccount: (req: Request, res: Response) => {
-        const { email, username, password }: Body = req.body;
+  const user = new Database('Database/users.db')
+    .prepare(`SELECT username, id, email, password FROM Users WHERE email = ?`)
+    .get(email) as User | undefined;
 
-        if(!username ||! email ||! password) return res.status(400).json({'Error': 'Missing parameter'});
-        if(username.length <= 2 || username.length >= 28) return res.status(400).json({'Error': 'Wrong username/password (must be length 2 - 28)'});
-        if(!USERNAME_REGEX.test(username.trim())) return res.status(400).json({'Error': 'Wrong username (any special caracter)'});
-        if(!PASSWORD_REGEX.test(password)) return res.status(400).json({'Error': 'Wrong password'});
-        if(!EMAIL_REGEX.test(email)) return res.status(400).json({'Error': 'Wrong email'});
+  if (!user) return res.status(404).json({ Error: 'User not found' });
 
-        const db = new Database('Database/users.db');
-        if(db.prepare('SELECT 1 FROM Users WHERE email = ? LIMIT 1').pluck().get(email) || db.prepare('SELECT 1 FROM Users WHERE username = ? LIMIT 1').pluck().get(username.trim())) return res.status(409).json({'Error': 'User already exist'});
-   
-        hash(password, 5, (err, bcryptedPassword) => {
-            db.prepare('INSERT INTO Users VALUES (?, ?, ?, ?, ?, ?)').run(null, email, username.trim(), bcryptedPassword, "null", Date.now());
-            return res.status(201).redirect('/');
-        });
-    },
+  compare(password, user.password, (_err, resBcrypt) => {
+    if (!resBcrypt) res.status(403).json({ Error: 'Invalid Password' });
+    else {
+      switch (methode) {
+        case 'delete':
+          sendMail({
+            email: user.email,
+            htmlPart: `
+            <center>
+                <a href="http://localhost/users/delete/${generateValidateToken(
+                  user,
+                  'delete'
+                )}" target="_blank"">Confirm account deletion</a>
+            </center>
+            `,
+            subject: 'Nowlid - Confirm account deletion',
+            textPart: 'Nowlid - Confirm account deletion'
+          })
+            .then(() => {
+              return res.status(200).render('pages/delete', { data: undefined, succes: true });
+            })
+            .catch(() => {
+              return res.status(200).render('pages/delete', { data: undefined, succes: true });
+            });
+          break;
+      }
+    }
+  });
+}
 
-    connectAccount: (req: Request, res: Response) => {
-        const { email, password }: Body  = req.body;
+export function createAccount(req: Request, res: Response): Response | void {
+  const { email, password, username }: Body = req.body;
 
-        if(!email || !password) return res.status(400).json({'Error': 'Missing parameters'});
+  if (!username || !email || !password) return res.status(400).json({ Error: 'Missing parameter' });
+  if (username.length <= 2 || username.length >= 28)
+    return res.status(400).json({ Error: 'Wrong username/password (must be length 2 - 28)' });
+  if (!USERNAME_REGEX.test(username.trim()))
+    return res.status(400).json({ Error: 'Wrong username (any special caracter)' });
+  if (!PASSWORD_REGEX.test(password)) return res.status(400).json({ Error: 'Wrong password' });
+  if (!EMAIL_REGEX.test(email)) return res.status(400).json({ Error: 'Wrong email' });
 
-        let user = new Database('Database/users.db').prepare(`SELECT id, password FROM Users WHERE email = ?`).get(email) as User | undefined;
+  const db = new Database('Database/users.db');
 
-        if(!user) return res.status(404).json({'Error': 'User not found'});
+  if (
+    db.prepare('SELECT 1 FROM Users WHERE email = ? LIMIT 1').pluck().get(email) ||
+    db.prepare('SELECT 1 FROM Users WHERE username = ? LIMIT 1').pluck().get(username.trim())
+  )
+    return res.status(409).json({ Error: 'User already exist' });
 
-        compare(password, user.password, (err, resBcrypt) => {
-            if(!resBcrypt || !user) return res.status(403).json({ 'Error': 'Invalid Password' });
-            
-            const token = jwt.default.generateTokenUser(user);
-            res.cookie('__SESSION_TOKEN', token, { secure: true, httpOnly: false, sameSite: "lax", maxAge: 10 * 60 * 1000});
+  hash(password, 5, (_err, bcryptedPassword) => {
+    db.prepare('INSERT INTO Users VALUES (?, ?, ?, ?, ?, ?)').run(
+      null,
+      email,
+      username.trim(),
+      bcryptedPassword,
+      'null',
+      Date.now()
+    );
+    return res.status(201).redirect('/');
+  });
+}
 
-            return res.status(201).redirect('/');
-        });
-    },
+export function connectAccount(req: Request, res: Response): Response | void {
+  const { email, password }: Body = req.body;
 
-    logoutAccount: (req: Request, res: Response) => {
-        res.status(200).clearCookie('__SESSION_TOKEN').redirect('/');
-    },
-};
+  if (!email || !password) return res.status(400).json({ Error: 'Missing parameters' });
+  const user = new Database('Database/users.db')
+    .prepare(`SELECT id, password FROM Users WHERE email = ?`)
+    .get(email) as User | undefined;
+
+  if (!user) return res.status(404).json({ Error: 'User not found' });
+
+  compare(password, user.password, (_err, resBcrypt): Response | void => {
+    if (!resBcrypt) return res.status(403).json({ Error: 'Invalid Password' });
+
+    const token = generateTokenUser(user);
+    res.cookie('__SESSION_TOKEN', token, { httpOnly: false, maxAge: 10 * 60 * 1000, sameSite: 'lax', secure: true });
+
+    res.status(201).redirect('/');
+  });
+}
+
+export function logoutAccount(_req: Request, res: Response): void {
+  res.status(200).clearCookie('__SESSION_TOKEN').redirect('/');
+}

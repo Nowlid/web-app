@@ -1,42 +1,40 @@
-import key from '../../key.json'
-import { Client, SendEmailV3_1, LibraryResponse} from 'node-mailjet';
+import * as dotenv from 'dotenv';
+import type { LibraryResponse, SendEmailV3_1 } from 'node-mailjet';
+import { Client } from 'node-mailjet';
 
-const mailjet = new Client({apiKey: key.MAILJET.PUBLIC,apiSecret: key.MAILJET.SECRET});
+dotenv.config();
+
 interface OptionsMail {
-  subject: string;
   email: string;
-  textPart: string;
   htmlPart: string;
+  subject: string;
+  textPart: string;
 }
 
-export default {
+export async function sendMail(options: OptionsMail): Promise<SendEmailV3_1.Response | undefined> {
+  if (!process.env['MAILJET_EMAIL'] || !process.env['MAILJET_PUBLIC'] || !process.env['MAILJET_SECRET']) return;
+  const mailjet = new Client({ apiKey: process.env['MAILJET_PUBLIC'], apiSecret: process.env['MAILJET_SECRET'] });
+  const data: SendEmailV3_1.Body = {
+    Messages: [
+      {
+        From: {
+          Email: process.env['MAILJET_EMAIL'],
+          Name: 'Nowlid'
+        },
+        HTMLPart: options.htmlPart,
+        Subject: options.subject,
+        TextPart: options.textPart,
+        To: [
+          {
+            Email: options.email,
+            Name: 'User'
+          }
+        ]
+      }
+    ]
+  };
 
-    async sendMail(options: OptionsMail) {
-   
-        const data: SendEmailV3_1.Body = {
-            Messages: [
-              {
-                From: {
-                  Email: key.MAILJET.EMAIL,
-                  Name: "Nowlid"
-                },
-                To: [
-                  {
-                    Email: options.email,
-                    Name: "User"
-                  }
-                ],
-                Subject: options.subject,
-                TextPart: options.textPart,
-                HTMLPart: options.htmlPart
-              }
-            ]
-          };
-        
-        const result: LibraryResponse<SendEmailV3_1.Response> = await mailjet
-            .post('send', { version: 'v3.1' })
-            .request(data);
-        
-        return result.body;
-    }
+  const result: LibraryResponse<SendEmailV3_1.Response> = await mailjet.post('send', { version: 'v3.1' }).request(data);
+
+  return result.body;
 }

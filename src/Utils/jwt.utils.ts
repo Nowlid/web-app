@@ -1,34 +1,47 @@
-import pkg from 'jsonwebtoken';
-import key from '../../key.json'
-const {sign, verify} = pkg;
-type User = {id: number}
+import * as dotenv from 'dotenv';
+import type { JwtPayload } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 
-export default {
+dotenv.config();
 
-    generateTokenUser: (user: User) => {
-        return sign({
-            userId: user.id,
-        },
-        key.JWT_SIGN_SECRET,
-        {
-            expiresIn: '1h'
-        })
+interface User {
+  id: number;
+}
+
+export function generateTokenUser(user: User): string | undefined {
+  if (!process.env['JWT_SIGN_SECRET']) return;
+  return sign(
+    {
+      userId: user.id
     },
-
-    generateValidateToken: (user: User, type: string) => {
-        return sign({
-            userId: user.id,
-            type: type,
-            exp: Math.floor(Date.now() / 1000) + (10 * 60)
-        }, key.JWT_SIGN_SECRET)
-    },
-
-    validateToken: (token: string) => {
-        try {
-            const jwtToken = verify(token, key.JWT_SIGN_SECRET);
-            if(typeof jwtToken !== "string") {
-                return jwtToken;
-            }
-        } catch(err) { }
+    process.env['JWT_SIGN_SECRET'],
+    {
+      expiresIn: '1h'
     }
+  );
+}
+
+export function generateValidateToken(user: User, type: string): string | undefined {
+  if (!process.env['JWT_SIGN_SECRET']) return;
+  return sign(
+    {
+      exp: Math.floor(Date.now() / 1000) + 10 * 60,
+      type,
+      userId: user.id
+    },
+    process.env['JWT_SIGN_SECRET']
+  );
+}
+
+export function validateToken(token: string): JwtPayload | undefined {
+  if (!process.env['JWT_SIGN_SECRET']) return;
+  try {
+    const jwtToken = verify(token, process.env['JWT_SIGN_SECRET']);
+    if (typeof jwtToken !== 'string') {
+      return jwtToken;
+    }
+  } catch (err) {
+    /* empty */
+  }
+  return;
 }

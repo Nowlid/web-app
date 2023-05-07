@@ -1,6 +1,6 @@
 {
   "name": "nowlid",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "",
   "main": "src/index.js",
   "scripts": {
@@ -8,11 +8,13 @@
   },
   "author": "Hecone",
   "license": "ISC",
+  "prettier": "@vic1707/prettier",
   "dependencies": {
     "bcrypt": "^5.1.0",
     "better-sqlite3": "^8.3.0",
     "body-parser": "^1.20.2",
     "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
@@ -23,6 +25,11 @@
     "@types/better-sqlite3": "^7.6.4",
     "@types/cookie-parser": "^1.4.3",
     "@types/jsonwebtoken": "^9.0.2",
+    "@vic1707/eslint-config": "^4.0.5",
+    "@vic1707/prettier": "^1.1.1",
+    "@vic1707/tsconfig": "^3.0.0",
+    "eslint": "^8.40.0",
+    "prettier": "^2.8.8",
     "typescript": "^5.0.4"
   }
 }

@@ -1,22 +1,23 @@
 import { Router } from 'express';
-import * as usersController from './Routes/usersController.ts';
 
-export const userRoute = (() => {
-    const apiRouter = Router();
+import * as usersController from './Routes/usersController';
 
-    apiRouter.route('/register').get(usersController.default.register)
-    apiRouter.route('/login').get(usersController.default.login);
-    apiRouter.route('/delete').get(usersController.default.delete);
-    apiRouter.route('/').get(usersController.default.user);
-    
-    apiRouter.route('/register').post(usersController.default.createAccount);
-    apiRouter.route('/login').post(usersController.default.connectAccount);
-    apiRouter.route('/validate').post(usersController.default.validate);
+export const userRoute = ((): Router => {
+  const apiRouter = Router();
 
-    // apiRouter.route('/edit').delete(usersController.default.edit);
+  apiRouter.route('/register').get(usersController.register);
+  apiRouter.route('/login').get(usersController.login);
+  apiRouter.route('/delete').get(usersController.delete_);
+  apiRouter.route('/').get(usersController.user);
 
-    apiRouter.route('/delete/:token').get(usersController.default.deleteConfirm);
-    apiRouter.route('/logout').get(usersController.default.logoutAccount);
+  apiRouter.route('/register').post(usersController.createAccount);
+  apiRouter.route('/login').post(usersController.connectAccount);
+  apiRouter.route('/validate').post(usersController.validate);
 
-    return apiRouter;
-})()
+  // apiRouter.route('/edit').delete(usersController.default.edit);
+
+  apiRouter.route('/delete/:token').get(usersController.deleteConfirm);
+  apiRouter.route('/logout').get(usersController.logoutAccount);
+
+  return apiRouter;
+})();
