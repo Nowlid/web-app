@@ -49,16 +49,16 @@ app.set('views', './views/');
 app.set('view engine', 'ejs');
 app.get('/', (req, res) => {
     const { cookies } = req;
-    let user;
+    let userDb;
     if (cookies['__SESSION_TOKEN']) {
         const token = (0, jwt_utils_1.validateToken)(cookies['__SESSION_TOKEN']);
         if (token?.exp && token.exp > Math.floor(Date.now() / 1000)) {
-            user = new better_sqlite3_1.default('Database/users.db')
+            userDb = new better_sqlite3_1.default('Database/users.db')
                 .prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`)
                 .get(token['userId']);
         }
     }
-    res.render('pages/home', { users: user });
+    res.render('pages/home', { user: userDb });
 });
 app.use('/users', routers_1.userRoute);
 //# sourceMappingURL=index.js.map

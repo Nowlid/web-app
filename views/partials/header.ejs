@@ -24,11 +24,11 @@
         </a></li>
     </nav>
 
-    <% if(users) {%>
+    <% if(user) {%>
         <div class="auth row-center">
             <a class="login row-center" href="/users/">
                 <img src="/assets/images/login-icon.png" alt="Connexion" class="icon">
-                <span><%= users.username %></span>
+                <span><%= user.username %></span>
             </a>
         </div>
     <% } else {%>

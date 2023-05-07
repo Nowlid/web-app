@@ -25,32 +25,32 @@ interface Body {
 }
 
 export function register(_req: Request, res: Response): void {
-  res.render('pages/register', { register: false, users: undefined });
+  res.render('pages/register', { register: false, user: undefined });
 }
 
 export function login(_req: Request, res: Response): void {
-  res.render('pages/login', { register: true, users: undefined });
+  res.render('pages/login', { register: true, user: undefined });
 }
 
 export function user(req: Request, res: Response): void {
   const { cookies }: { cookies: Record<string, string> } = req;
 
-  let user: User | undefined;
+  let userDb: User | undefined;
   if (cookies['__SESSION_TOKEN']) {
     const token = validateToken(cookies['__SESSION_TOKEN']);
     if (token?.exp && token.exp > Math.floor(Date.now() / 1000)) {
-      user = new Database('Database/users.db')
+        userDb = new Database('Database/users.db')
         .prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`)
         .get(token['userId']) as User | undefined;
     }
   }
 
-  if (!user) return res.render('pages/register', { register: false, users: undefined });
-  res.render('pages/user', { users: user });
+  if (!user) return res.render('pages/register', { register: false, user: undefined });
+  res.render('pages/user', { user: userDb });
 }
 
 export function delete_(_req: Request, res: Response): void {
-  res.render('pages/delete', { succes: undefined, users: undefined });
+  res.render('pages/delete', { succes: undefined, user: undefined });
 }
 
 export function deleteConfirm(req: Request, res: Response): Response | void {

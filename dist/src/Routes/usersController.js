@@ -12,31 +12,31 @@ const USERNAME_REGEX = /^[A-Za-z0-9--_]/;
 const EMAIL_REGEX = /^[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*@[a-zA-Z0-9]+(?:\.[a-zA-Z0-9]+)*$/;
 const PASSWORD_REGEX = /(?=.*\d)(?=.*[a-zA-Z])(?=).{8,1048}/;
 function register(_req, res) {
-    res.render('pages/register', { register: false, users: undefined });
+    res.render('pages/register', { register: false, user: undefined });
 }
 exports.register = register;
 function login(_req, res) {
-    res.render('pages/login', { register: true, users: undefined });
+    res.render('pages/login', { register: true, user: undefined });
 }
 exports.login = login;
 function user(req, res) {
     const { cookies } = req;
-    let user;
+    let userDb;
     if (cookies['__SESSION_TOKEN']) {
         const token = (0, jwt_utils_1.validateToken)(cookies['__SESSION_TOKEN']);
         if (token?.exp && token.exp > Math.floor(Date.now() / 1000)) {
-            user = new better_sqlite3_1.default('Database/users.db')
+            userDb = new better_sqlite3_1.default('Database/users.db')
                 .prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`)
                 .get(token['userId']);
         }
     }
     if (!user)
-        return res.render('pages/register', { register: false, users: undefined });
-    res.render('pages/user', { users: user });
+        return res.render('pages/register', { register: false, user: undefined });
+    res.render('pages/user', { user: userDb });
 }
 exports.user = user;
 function delete_(_req, res) {
-    res.render('pages/delete', { succes: undefined, users: undefined });
+    res.render('pages/delete', { succes: undefined, user: undefined });
 }
 exports.delete_ = delete_;
 function deleteConfirm(req, res) {
