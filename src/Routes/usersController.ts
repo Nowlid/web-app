@@ -39,7 +39,7 @@ export function user(req: Request, res: Response): void {
   if (cookies['__SESSION_TOKEN']) {
     const token = validateToken(cookies['__SESSION_TOKEN']);
     if (token?.exp && token.exp > Math.floor(Date.now() / 1000)) {
-        userDb = new Database('Database/users.db')
+      userDb = new Database('Database/users.db')
         .prepare(`SELECT id, username, email, dateCreated, avatar FROM Users WHERE id = ?`)
         .get(token['userId']) as User | undefined;
     }
